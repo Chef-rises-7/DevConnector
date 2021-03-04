@@ -1,3 +1,4 @@
 {
-    "mongooseURI": "mongodb+srv://harish123:test123@devconnector.ffqwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    "mongooseURI": "mongodb+srv://harish123:test123@devconnector.ffqwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtToken": "filochan"
 }
