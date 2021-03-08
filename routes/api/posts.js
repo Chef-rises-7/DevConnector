@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const Post = require("../../models/Posts.js");
 const User = require("../../models/User");
@@ -62,6 +63,7 @@ router.get("/:id", auth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
     }
+    res.json(post);
   } catch (err) {
     console.log(err.message);
     if (err.king !== "ObjectId") {
@@ -93,6 +95,58 @@ router.delete("/:id", auth, async (req, res) => {
     if (err.king !== "ObjectId") {
       return res.status(404).json({ msg: "Post not found" });
     }
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route PUT api/posts/like/:id
+// @desc Like a post
+// @access PRIVATE
+
+router.put("/like/:id", auth, async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.id);
+
+    if (
+      post.likes.filter((like) => like.user.toString() === req.user.id).length >
+      0
+    ) {
+      return res.status(400).json({ msg: "Post has been already liked" });
+    }
+
+    post.likes.unshift({ user: req.user.id });
+    await post.save();
+    res.json(post.likes);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route PUT api/posts/unlike/:id
+// @desc Unlike a post
+// @access PRIVATE
+
+router.put("/unlike/:id", auth, async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.id);
+    console.log(post.likes);
+
+    if (
+      post.likes.filter((like) => like.user.toString() === req.user.id)
+        .length === 0
+    ) {
+      return res.status(400).json({ msg: "Post has not been liked" });
+    }
+
+    const index = post.likes
+      .map((like) => like.user.toString())
+      .indexOf(req.user.id);
+    post.likes.splice(index, 1);
+    await post.save();
+    res.json(post.likes);
+  } catch (err) {
+    console.log(err.message);
     res.status(500).send("Server Error");
   }
 });
