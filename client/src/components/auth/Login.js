@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { login } from "../../actions/auth.js";
 
-const Login = () => {
+const Login = ({ login, isAuthenticated }) => {
+  const history = useHistory();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,8 +19,14 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    login({email,password});
     console.log("yup biro");
   };
+
+  if(isAuthenticated) {
+    history.push("/dashboard");
+  };
+
   return (
     <Fragment>
       <h1 class="large text-primary">Sign In</h1>
@@ -44,13 +54,22 @@ const Login = () => {
           />
         </div>
 
-        <input type="submit" class="btn btn-primary" value="Register" />
+        <input type="submit" class="btn btn-primary" value="Login" />
       </form>
       <p class="my-1">
-        Dont have an account? <Link to="/register">Sign Un</Link>
+        Dont have an account? <Link to="/register">Sign Up</Link>
       </p>
     </Fragment>
   );
 };
 
-export default Login;
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps,{ login })(Login);

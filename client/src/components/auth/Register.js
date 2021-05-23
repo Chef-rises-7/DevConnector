@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { setAlert } from "../../actions/alert.js";
+import { register } from "../../actions/auth.js";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert,register, isAuthenticated }) => {
+  const history = useHistory();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,6 +15,7 @@ const Register = ({ setAlert }) => {
   });
 
   const { name, email, password, password2 } = formData;
+  const username = name;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,9 +26,15 @@ const Register = ({ setAlert }) => {
     if (password !== password2) {
       setAlert("Password not matched biro", "danger");
     } else {
+      register({username,email,password});
       console.log("yup biro");
     }
   };
+
+  if(isAuthenticated) {
+    history.push("/dashboard");
+  };
+
   return (
     <Fragment>
       <h1 class="large text-primary">Sign Up</h1>
@@ -86,6 +95,11 @@ const Register = ({ setAlert }) => {
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 }
 
-export default connect(null, { setAlert })(Register);
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { setAlert, register })(Register);
