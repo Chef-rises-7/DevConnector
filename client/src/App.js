@@ -10,6 +10,8 @@ import store from "./store";
 import "./App.css";
 import setAuthToken from "./utils/setAuthToken";
 import { loadUser } from "./actions/auth";
+import Dashboard from "./components/dashboard/Dashboard";
+import PrivateRoute from "./components/routing/PrivateRoute";
 
 if(localStorage.getItem("token")) {
   setAuthToken(localStorage.getItem("token"));
@@ -33,6 +35,7 @@ const App = () => {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
         </section>
       </Router>
