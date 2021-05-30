@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const User = require("../../models/User");
 const Profile = require("../../models/Profile");
+const Post = require("../../models/Posts");
 const { check, validationResult } = require("express-validator");
 const config = require("config");
 const axios = require("axios");
@@ -155,6 +156,7 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     //Delete a profile and user
+    await Post.deleteMany({ user: req.user.id });
     await Profile.findOneAndDelete({ user: req.user.id });
     await User.findOneAndDelete({ _id: req.user.id });
 
@@ -233,7 +235,7 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
     profile.experience.splice(index_num, 1);
     await profile.save();
 
-    res.json({ msg: "User's experience deleted" });
+    res.json(profile);
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server Error");
@@ -310,7 +312,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
     profile.education.splice(index_num, 1);
     await profile.save();
 
-    res.json({ msg: "User's education deleted" });
+    res.json(profile);
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server Error");

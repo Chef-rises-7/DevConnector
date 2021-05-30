@@ -1,6 +1,6 @@
  /* eslint-disable */ 
 import axios from "axios";
-import { REGISTER_SUCCESS, REGISTER_FAIL, AUTH_ERROR, USER_LOADED, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "../actions/types";
+import { REGISTER_SUCCESS, REGISTER_FAIL, AUTH_ERROR, USER_LOADED, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CLEAR_PROFILE } from "../actions/types";
 import setAuthToken from "../utils/setAuthToken";
 import { setAlert } from "./alert";
 
@@ -88,6 +88,9 @@ export const login = ({ email,password}) => async (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
+    dispatch({
+        type: CLEAR_PROFILE
+    });
     dispatch({
         type: LOGOUT
     });
