@@ -1,0 +1,6 @@
+{
+    "mongooseURI": "mongodb+srv://harish123:test123@devconnector.ffqwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtToken": "filochan",
+    "githubClientId": "82e7f03336197eea3535",
+    "githubClientSecret": "593f52acac810053ba2001c495aca1269db34a80"
+}
